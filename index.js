@@ -35,31 +35,29 @@ app.get("/scrap/:url", async (req, res) => {
 
     await page.waitForSelector(roomElementsSelector);
 
-    const tempRoomElements = await page.$$(roomElementsSelector);
-    const roomElements = [...tempRoomElements];
+    const roomElements = await page.$$(roomElementsSelector);
     console.log(`Found ${roomElements.length} room elements.`);
 
     for (let index = 0; index < roomElements.length; index++) {
-      // const newPage = await browser.newPage();
-      // await newPage.goto(url, {
-      //   waitUntil: "domcontentloaded",
-      // });
+      const newPage = await browser.newPage();
+      await newPage.goto(url, {
+        waitUntil: "domcontentloaded",
+      });
       // const roomElements = await newPage.$$(roomElementsSelector);
+      // const roomElement = roomElements[index];
+      const roomElements = await newPage.$$(roomElementsSelector);
       const roomElement = roomElements[index];
-      console.log("index => ", index);
-
-      console.log("roomElement => ", roomElement);
 
       if (!roomElement) continue;
 
       try {
         await roomElement.evaluate((el) => el.scrollIntoView());
         await roomElement.click();
-        await page.waitForSelector(".rt-lightbox-title");
+        await newPage.waitForSelector(".rt-lightbox-title");
 
         console.log("title class got =================> ");
 
-        const room = await page.evaluate(() => {
+        const room = await newPage.evaluate(() => {
           let roomData = { name: "", description: "" };
           //for scrapping title
           const titleElement = document.querySelector(".rt-lightbox-title");
@@ -84,20 +82,20 @@ app.get("/scrap/:url", async (req, res) => {
 
         console.log("title got =================> ");
 
-        const facilities = await page.$$eval(".bui-badge", (elements) =>
+        const facilities = await newPage.$$eval(".bui-badge", (elements) =>
           elements.map((el) => el?.textContent?.trim())
         );
 
         console.log("facilities got =================> ");
 
-        const otherFacilities = await page.$$eval(
+        const otherFacilities = await newPage.$$eval(
           ".hprt-lightbox-list__item.js-lightbox-facility",
           (elements) => elements.map((el) => el?.textContent?.trim())
         );
 
         console.log("otherFacilities got =================> ");
 
-        const imageURLs = await page.$$eval(
+        const imageURLs = await newPage.$$eval(
           ".js-hotel-thumb.hotel_thumbs_sprite.change_large_image_on_hover",
           (elements) =>
             elements.map((el) => el?.children[0]?.attributes[0]?.nodeValue)
@@ -108,7 +106,6 @@ app.get("/scrap/:url", async (req, res) => {
         const description_n_size = "";
         //   room?.description && (await getRoomDescription(room?.description));
 
-        await page.keyboard.press("Escape");
         roomDetails.push({
           ...room,
           description:
@@ -126,7 +123,8 @@ app.get("/scrap/:url", async (req, res) => {
         //     setTimeout(resolve, 4000);
         //   });
         // });
-        // await newPage.close();
+
+        await newPage.close();
       } catch (error) {
         console.log(
           `An error occurred for room index ${index}: ${error.message}`
