@@ -12,6 +12,7 @@ app.get("/scrap/:url", async (req, res) => {
       return res.send({ message: "URL is required" }).status(400);
     }
     const browser = await puppeteer.launch({
+      headless: true,
       args: [
         "--disable-setuid-sandbox",
         "--no-sandbox",
