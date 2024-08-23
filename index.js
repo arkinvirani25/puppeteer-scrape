@@ -53,6 +53,8 @@ app.get("/scrap/:url", async (req, res) => {
         await roomElement.click();
         await newPage.waitForSelector(".rt-lightbox-title");
 
+        console.log("title class got =================> ");
+
         const room = await newPage.evaluate(() => {
           let roomData = { name: "", description: "" };
           //for scrapping title
@@ -76,19 +78,28 @@ app.get("/scrap/:url", async (req, res) => {
           return roomData;
         });
 
+        console.log("title got =================> ");
+
         const facilities = await newPage.$$eval(".bui-badge", (elements) =>
           elements.map((el) => el?.textContent?.trim())
         );
+
+        console.log("facilities got =================> ");
 
         const otherFacilities = await newPage.$$eval(
           ".hprt-lightbox-list__item.js-lightbox-facility",
           (elements) => elements.map((el) => el?.textContent?.trim())
         );
+
+        console.log("otherFacilities got =================> ");
+        
         const imageURLs = await newPage.$$eval(
           ".js-hotel-thumb.hotel_thumbs_sprite.change_large_image_on_hover",
           (elements) =>
             elements.map((el) => el?.children[0]?.attributes[0]?.nodeValue)
         );
+
+        console.log("imageURLs got =================> ");
 
         const description_n_size = "";
         //   room?.description && (await getRoomDescription(room?.description));
@@ -105,11 +116,11 @@ app.get("/scrap/:url", async (req, res) => {
           imageURLs: imageURLs || [],
         });
 
-        await newPage.evaluate(() => {
-          return new Promise((resolve) => {
-            setTimeout(resolve, 4000);
-          });
-        });
+        // await newPage.evaluate(() => {
+        //   return new Promise((resolve) => {
+        //     setTimeout(resolve, 4000);
+        //   });
+        // });
 
         await newPage.close();
       } catch (error) {
@@ -133,6 +144,6 @@ app.get("/scrap/:url", async (req, res) => {
   }
 });
 
-app.listen(5000, () => {
-  console.log(`Listening on port 5000`);
+app.listen(PORT, () => {
+  console.log(`Listening on port ${process.env.PORT}`);
 });
