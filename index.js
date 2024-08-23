@@ -104,6 +104,7 @@ app.get("/scrap/:url", async (req, res) => {
         const description_n_size = "";
         //   room?.description && (await getRoomDescription(room?.description));
 
+        await page.keyboard.press('Escape');
         roomDetails.push({
           ...room,
           description:
@@ -121,7 +122,6 @@ app.get("/scrap/:url", async (req, res) => {
         //     setTimeout(resolve, 4000);
         //   });
         // });
-        await page.keyboard.press('Escape');
         // await newPage.close();
       } catch (error) {
         console.log(
