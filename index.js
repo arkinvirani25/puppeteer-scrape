@@ -46,9 +46,9 @@ app.get("/scrap/:url", async (req, res) => {
       // });
       // const roomElements = await newPage.$$(roomElementsSelector);
       const roomElement = roomElements[index];
-      console.log("index => ",index);
-      
-      console.log("roomElement => ", roomElement.textContent());
+      console.log("index => ", index);
+
+      console.log("roomElement => ", roomElement);
 
       if (!roomElement) continue;
 
