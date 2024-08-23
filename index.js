@@ -106,8 +106,6 @@ app.get("/scrap/:url", async (req, res) => {
 
         await page.keyboard.press("Escape");
 
-        await page.reload();
-
         roomDetails.push({
           ...room,
           description:
@@ -119,6 +117,7 @@ app.get("/scrap/:url", async (req, res) => {
           facilities: [...facilities, ...otherFacilities] || [],
           imageURLs: imageURLs || [],
         });
+        await page.reload();
 
         // await newPage.evaluate(() => {
         //   return new Promise((resolve) => {
