@@ -34,12 +34,12 @@ app.get("/scrap/:url", async (req, res) => {
     const roomElementsSelector = ".dba1b3bddf.d371fb5186.b72e42bcff";
 
     await page.waitForSelector(roomElementsSelector);
-    
+
     const tempRoomElements = await page.$$(roomElementsSelector);
     const roomElements = [...tempRoomElements];
     console.log(`Found ${roomElements.length} room elements.`);
 
-    for (let index = 0; index < roomElements.length; index++) {
+    for (let index = 1; index <= roomElements.length; index++) {
       // const newPage = await browser.newPage();
       // await newPage.goto(url, {
       //   waitUntil: "domcontentloaded",
