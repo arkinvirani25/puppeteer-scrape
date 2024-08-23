@@ -34,8 +34,9 @@ app.get("/scrap/:url", async (req, res) => {
     const roomElementsSelector = ".dba1b3bddf.d371fb5186.b72e42bcff";
 
     await page.waitForSelector(roomElementsSelector);
-
-    const roomElements = await page.$$(roomElementsSelector);
+    
+    const tempRoomElements = await page.$$(roomElementsSelector);
+    const roomElements = [...tempRoomElements];
     console.log(`Found ${roomElements.length} room elements.`);
 
     for (let index = 0; index < roomElements.length; index++) {
@@ -105,7 +106,6 @@ app.get("/scrap/:url", async (req, res) => {
         //   room?.description && (await getRoomDescription(room?.description));
 
         await page.keyboard.press("Escape");
-
         roomDetails.push({
           ...room,
           description:
@@ -117,7 +117,6 @@ app.get("/scrap/:url", async (req, res) => {
           facilities: [...facilities, ...otherFacilities] || [],
           imageURLs: imageURLs || [],
         });
-        await page.reload();
 
         // await newPage.evaluate(() => {
         //   return new Promise((resolve) => {
