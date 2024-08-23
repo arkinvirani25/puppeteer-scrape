@@ -39,11 +39,11 @@ app.get("/scrap/:url", async (req, res) => {
     console.log(`Found ${roomElements.length} room elements.`);
 
     for (let index = 0; index < roomElements.length; index++) {
-      const newPage = await browser.newPage();
-      await newPage.goto(url, {
-        waitUntil: "domcontentloaded",
-      });
-      const roomElements = await newPage.$$(roomElementsSelector);
+      // const newPage = await browser.newPage();
+      // await newPage.goto(url, {
+      //   waitUntil: "domcontentloaded",
+      // });
+      // const roomElements = await newPage.$$(roomElementsSelector);
       const roomElement = roomElements[index];
 
       if (!roomElement) continue;
@@ -51,11 +51,11 @@ app.get("/scrap/:url", async (req, res) => {
       try {
         await roomElement.evaluate((el) => el.scrollIntoView());
         await roomElement.click();
-        await newPage.waitForSelector(".rt-lightbox-title");
+        await page.waitForSelector(".rt-lightbox-title");
 
         console.log("title class got =================> ");
 
-        const room = await newPage.evaluate(() => {
+        const room = await page.evaluate(() => {
           let roomData = { name: "", description: "" };
           //for scrapping title
           const titleElement = document.querySelector(".rt-lightbox-title");
@@ -80,20 +80,20 @@ app.get("/scrap/:url", async (req, res) => {
 
         console.log("title got =================> ");
 
-        const facilities = await newPage.$$eval(".bui-badge", (elements) =>
+        const facilities = await page.$$eval(".bui-badge", (elements) =>
           elements.map((el) => el?.textContent?.trim())
         );
 
         console.log("facilities got =================> ");
 
-        const otherFacilities = await newPage.$$eval(
+        const otherFacilities = await page.$$eval(
           ".hprt-lightbox-list__item.js-lightbox-facility",
           (elements) => elements.map((el) => el?.textContent?.trim())
         );
 
         console.log("otherFacilities got =================> ");
 
-        const imageURLs = await newPage.$$eval(
+        const imageURLs = await page.$$eval(
           ".js-hotel-thumb.hotel_thumbs_sprite.change_large_image_on_hover",
           (elements) =>
             elements.map((el) => el?.children[0]?.attributes[0]?.nodeValue)
@@ -121,8 +121,8 @@ app.get("/scrap/:url", async (req, res) => {
         //     setTimeout(resolve, 4000);
         //   });
         // });
-
-        await newPage.close();
+        await page.keyboard.press('Escape');
+        // await newPage.close();
       } catch (error) {
         console.log(
           `An error occurred for room index ${index}: ${error.message}`
