@@ -11,19 +11,19 @@ app.get("/scrap/:url", async (req, res) => {
     if (!url) {
       return res.send({ message: "URL is required" }).status(400);
     }
-    // const browser = await puppeteer.launch({
-    //   args: [
-    //     "--disable-setuid-sandbox",
-    //     "--no-sandbox",
-    //     "--single-process",
-    //     "--no-zygote",
-    //   ],
-    //   executablePath:
-    //     process.env.NODE_ENV === "production"
-    //       ? process.env.PUPPETEER_EXECUTABLE_PATH
-    //       : puppeteer.executablePath(),
-    // });
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({
+      args: [
+        "--disable-setuid-sandbox",
+        "--no-sandbox",
+        "--single-process",
+        "--no-zygote",
+      ],
+      executablePath:
+        process.env.NODE_ENV === "production"
+          ? process.env.PUPPETEER_EXECUTABLE_PATH
+          : puppeteer.executablePath(),
+    });
+    // const browser = await puppeteer.launch();
     const page = await browser.newPage();
 
     await page.goto(url, {
