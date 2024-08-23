@@ -92,7 +92,7 @@ app.get("/scrap/:url", async (req, res) => {
         );
 
         console.log("otherFacilities got =================> ");
-        
+
         const imageURLs = await newPage.$$eval(
           ".js-hotel-thumb.hotel_thumbs_sprite.change_large_image_on_hover",
           (elements) =>
@@ -144,6 +144,6 @@ app.get("/scrap/:url", async (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
+app.listen(process.env.PORT, () => {
   console.log(`Listening on port ${process.env.PORT}`);
 });
